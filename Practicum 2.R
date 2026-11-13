@@ -4,8 +4,28 @@
 #Requires: 2024 US County Shapefile (cb_2024_us_county_500k.shp), NYS High Points Dataset (nyshighpoints.csv), US Census API, and Algara & Amlani County Election Dataset
 #Output: Figures and Quarto Document typeset as a .pdf
 
-# 1 : Use shapefile to draw a map of the counties of New York State (and only New York State - do not include counties from neighboring states).
 
+
+# Set up
+
+# load in packages
+library(dplyr)
+library(sf)
+
+# Read in the shapefile
+
+
+
+# Read in high points data set
+points <- read.csv("nyshighpoints.csv")
+summary(points)
+
+points <- st_as_sf(points, coords = c("longitude", "latitude"), crs = 4326)
+points
+
+
+# 1 : Use shapefile to draw a map of the counties of New York State (and only New York State - do not include counties from neighboring states).
+plot(points)
 
 # 2: Using the same file, which is the largest county, by area, in New York? Which is the smallest?
 
