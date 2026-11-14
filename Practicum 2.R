@@ -5,19 +5,18 @@
 #Output: Figures and Quarto Document typeset as a .pdf
 
 
-
 # Set up
 
 # load in packages
 library(dplyr)
 library(sf)
 
-# Read in the shapefile
+# Read in the shapefile from my Data folder
+county_shapefile <- st_read("~/Desktop/Current Classes/R/Practicum 2/Data/cb_2024_us_county_500k.shp")
 
 
-
-# Read in high points data set
-points <- read.csv("nyshighpoints.csv")
+# Read in high points data set from my Data folder
+points <- read.csv("~/Desktop/Current Classes/R/Practicum 2/Data/nyshighpoints.csv")
 summary(points)
 
 points <- st_as_sf(points, coords = c("longitude", "latitude"), crs = 4326)
