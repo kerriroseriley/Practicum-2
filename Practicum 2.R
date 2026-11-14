@@ -12,7 +12,7 @@ library(dplyr)
 library(sf)
 
 # Read in the shapefile from my Data folder
-county_shapefile <- st_read("~/Desktop/Current Classes/R/Practicum 2/Data/cb_2024_us_county_500k.zip")
+county_shapefile <- st_read("~/Desktop/Current Classes/R/Practicum 2/Data/cb_2024_us_county_500k/cb_2024_us_county_500k.shp")
 
 
 # Read in high points data set from my Data folder
