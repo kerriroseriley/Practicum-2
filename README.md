@@ -3,7 +3,7 @@
 # Author: Kerri Rose Riley
 
 ## Description
-Spatial data analysis and choropleth mapping of New York State's 62 counties in R, visualizing county-level topographic elevation high points, U.S. Census population density, and historical presidential election trends (2000–2020) using `sf`, `ggplot2`, and `tidycensus`.
+Spatial data analysis and choropleth mapping of New York State's 62 counties in R, visualizing county-level topographic elevation high points, U.S. Census population density, and historical presidential election trends (2000–2020) using `sf`, `tidyverse`, 'scale', and `tidycensus`.
 
 
 ## Files
