@@ -7,6 +7,8 @@
 
 # Set up
 setwd("~/Desktop/Current Classes/R/Practicum 2")
+
+# Create Figures folder to store maps 
 dir.create("Figures", showWarnings = FALSE)
 
 # load in packages
@@ -17,34 +19,25 @@ library(scales) # palette function that runs from black to red
 
 # crs = 4326 is WGS 84, the ordinary latitude and longitude your phone’s GPS uses.
 
-# POINTS
-# Read in high points data set from my Data folder
+# Points; Read in high points data set from my Data folder
 points <- read.csv("~/Desktop/Current Classes/R/Practicum 2/Data/nyshighpoints.csv")
-summary(points)
 
 points <- st_as_sf(points, coords = c("Longitude", "Latitude"), crs = 4326)
-points
 
-plot(st_geometry(points))
-
-# POLYGONS
-# Read in the shapefile from my Data folder
+# Polygons; Read in the shape file from my Data folder
 us_counties <- st_read("~/Desktop/Current Classes/R/Practicum 2/Data/cb_2024_us_county_500k/cb_2024_us_county_500k.shp", crs = 4326)
-us_counties
 
 # Filter strictly to New York State
 ny_counties <- us_counties %>%
   filter(STUSPS == "NY")
 
-
-# 1 : Use shapefile to draw a map of the counties of New York State (and only New York State - do not include counties from neighboring states).
+# 1 : Use shape file to draw a map of the counties of New York State
 # Plot the county boundaries
 plot(st_geometry(ny_counties), col = "lightgrey", main = "Counties of New York State")
 
-
 # 2: Using the same file, which is the largest county, by area, in New York? Which is the smallest?
 
-# Calculate total area (land + water) in sq meters
+# Calculate total area (land + water) in square meters
 ny_counties$total_area <- ny_counties$ALAND + ny_counties$AWATER
 
 # Sort counties by total area from smallest to largest
@@ -56,7 +49,6 @@ tail(ny_sorted[, c("NAME", "total_area")], 1)
 # Smallest county
 head(ny_sorted[, c("NAME", "total_area")], 1)
 
-
 # 3: Use nyshighpoints.csv to plot the location of high points of every county in the state of New York over the base county map.
 # add=TRUE draws over the plot, pch=16 makes it a solid dot
 plot(st_geometry(points), pch=16, add=TRUE)
@@ -65,8 +57,7 @@ plot(st_geometry(points), pch=16, add=TRUE)
 
 # Check outliers
 points_sorted <- points[order(points$Elevation_Meters), ]
-tail(points_sorted$Elevation_Meters, 10)
-# 1629 is much higher but should not be splitted
+tail(points_sorted$Elevation_Meters, 10) # 1629 is much higher but should not be splitted
 
 # 5-color elevation palette (green -> yellow -> brown -> red -> white)
 elev_pal <- gradient_n_pal(c("darkgreen", "yellow", "saddlebrown", "red", "white"))
@@ -96,25 +87,21 @@ legend("topleft",
        bty    = "o")
 
 # 5: What are the highest and lowest high points in the state?
-# Sort high points from lowest to highest elevation
-points_sorted <- points[order(points$Elevation_Meters), ]
-
 # Highest high point in NY
 tail(points_sorted[, c("County", "High_Point_Name", "Elevation_Feet", "Elevation_Meters")], 1)
 
 # Lowest high point in NY
 head(points_sorted[, c("County", "High_Point_Name", "Elevation_Feet", "Elevation_Meters")], 1)
 
-
 # 6: Label the highest high point on a map
-
 # Separate the highest high point (Mount Marcy) from the rest of the points
 highest_pt <- points[which.max(points$Elevation_Meters), ]
 other_pts  <- points[-which.max(points$Elevation_Meters), ]
 
-# Recompute colors for the regular points (or keep original ptcol without the max point)
+# Keep original ptcol without the max point
 ptcol_other <- ptcol[-which.max(points$Elevation_Meters)]
 
+# To save map 1
 png("Figures/map1.png", width = 11, height = 6, units = "in", res = 300)
 
 # Plot base map, regular points, and the highlighted highest point
@@ -159,7 +146,7 @@ rng     <- range(vals, na.rm = TRUE)
 z       <- rescale(vals, to = c(0, 1), from = rng)
 polycol <- pop_pal(z)
 
-
+# To save map 2
 png("Figures/map2.png", width = 11, height = 6, units = "in", res = 300)
 
 # Plot shaded NY counties
@@ -181,9 +168,8 @@ legend("topleft",
 dev.off()
 
 # 8: Calculate population density for each county using population and land area. 
-# Shade in each county according to its population density. Use a light lavender to dark purple scale.
 
-# Calculate land area in square miles (1 sq mile = 2,589,988.11 sq meters) and population density
+# Calculate land area in square miles (1 square mile = 2,589,988.11 square meters) and population density
 ny_counties$land_sq_mi  <- ny_counties$ALAND / 2589988.11
 ny_counties$pop_density <- ny_counties$population / ny_counties$land_sq_mi
 
@@ -204,7 +190,7 @@ range_labels <- paste0(format(breaks[-6], big.mark = ",", trim = TRUE), "–",
                        format(breaks[-1], big.mark = ",", trim = TRUE))
 mid_z        <- seq(0.1, 0.9, length.out = 5)
 
-
+# To save map 3
 png("Figures/map3.png", width = 11, height = 6, units = "in", res = 300)
 
 plot(st_geometry(ny_counties), col = polycol, border = "black",
@@ -238,7 +224,7 @@ tail(dens_sorted[, c("NAME", "pop_density")], 1)
 # Least dense county
 head(dens_sorted[, c("NAME", "pop_density")], 1)
 
-# 10: Bonus: Use the Algara and Amlani’s county level data to create maps of two-party vote for each county in New York in the 2000, 2004, 2008, 2012, 2016, and 2020 elections. Show vote by partisan lean, where more Democratic voting counties are bluer, more Republican voting counties are redder, and evenly split counties are white. You may discount any third party votes.
+# 10: Use the Algara and Amlani’s county level data to create maps of two-party vote for each county in New York in the 2000, 2004, 2008, 2012, 2016, and 2020 elections. Show vote by partisan lean, where more Democratic voting counties are bluer, more Republican voting counties are redder, and evenly split counties are white. You may discount any third party votes.
 
 # Download the Harvard Dataverse file directly into my Data folder
 url <- "https://dataverse.harvard.edu/api/access/datafile/5028532"
@@ -250,7 +236,6 @@ download.file(url, destfile = dest, mode = "wb")
 load(dest)
 
 # Pad FIPS codes to 5 digits so NY counties start with "36"
-# (Swap 'fips', 'election_year', 'democratic_raw_votes', 'republican_raw_votes' if names() differs)
 pres_elections_release$GEOID <- sprintf("%05d", as.numeric(pres_elections_release$fips))
 
 # Filter to NY ("36") and the 6 presidential election years
@@ -265,8 +250,8 @@ ny_elec$dem_two_party <- ny_elec$democratic_raw_votes /
 # Create diverging Red -> White -> Blue palette
 partisan_pal <- gradient_n_pal(c("red3", "white", "blue3"))
 
-
-png("Figures/map4.png", width = 14, height = 8, units = "in", res = 300)
+# To save map 4
+png("Figures/map4.png", width = 14, height = 10, units = "in", res = 300)
 
 # Plot all 6 elections in a 2x3 grid
 par(mfrow = c(2, 3), mar = c(1, 1, 3, 1))
@@ -289,10 +274,4 @@ for (yr in years) {
          cex    = 0.75,
          bty    = "o")
 }
-
 dev.off()
-
-# Reset plotting layout back to default
-par(mfrow = c(1, 1), mar = c(5, 4, 4, 2) + 0.1)
-
-
