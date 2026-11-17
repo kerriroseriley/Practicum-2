@@ -8,23 +8,46 @@
 # Set up
 
 # load in packages
-library(dplyr)
-library(sf)
-
-# Read in the shapefile from my Data folder
-county_shapefile <- st_read("~/Desktop/Current Classes/R/Practicum 2/Data/cb_2024_us_county_500k/cb_2024_us_county_500k.shp")
+library(sf) # reads shapefile - simple features
+library(tidyverse) # Includes ggplots2, dplyr, readr
+library(tidycensus) # Pulls NY county pop data from US census API
 
 
+# crs = 4326 is WGS 84, the ordinary latitude and longitude your phone’s GPS uses.
+
+
+# POINTS
 # Read in high points data set from my Data folder
 points <- read.csv("~/Desktop/Current Classes/R/Practicum 2/Data/nyshighpoints.csv")
 summary(points)
 
-points <- st_as_sf(points, coords = c("longitude", "latitude"), crs = 4326)
+points <- st_as_sf(points, coords = c("Longitude", "Latitude"), crs = 4326)
 points
+
+plot(points)
+plot(st_geometry(points))
+
+# POLYGONS
+# Read in the shapefile from my Data folder
+us_counties <- st_read("~/Desktop/Current Classes/R/Practicum 2/Data/cb_2024_us_county_500k/cb_2024_us_county_500k.shp", crs = 4326)
+us_counties
+
+plot(us_counties)
+plot(st_geometry(us_counties), col="lightgrey")
+
+plot(st_geometry(points), pch=16, add=TRUE)
+
+
+
+# Filter strictly to New York State
+ny_counties <- counties_us %>%
+  filter(STUSPS == "NY")
 
 
 # 1 : Use shapefile to draw a map of the counties of New York State (and only New York State - do not include counties from neighboring states).
-plot(points)
+
+
+
 
 # 2: Using the same file, which is the largest county, by area, in New York? Which is the smallest?
 
