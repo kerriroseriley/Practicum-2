@@ -7,6 +7,7 @@
 
 # Set up
 setwd("~/Desktop/Current Classes/R/Practicum 2")
+dir.create("Figures", showWarnings = FALSE)
 
 # load in packages
 library(sf) # reads shapefile - simple features
@@ -119,13 +120,13 @@ png("Figures/map1.png", width = 11, height = 6, units = "in", res = 300)
 # Plot base map, regular points, and the highlighted highest point
 plot(st_geometry(ny_counties), col = "lightgrey", main = "NY County High Points by Elevation")
 plot(st_geometry(other_pts), pch = 21, bg = ptcol_other, col = "black", cex = 1.2, add = TRUE)
-plot(st_geometry(highest_pt), pch = 24, bg = "red", col = "black", cex = 2.2, add = TRUE)
+plot(st_geometry(highest_pt), pch = 24, bg = "white", col = "black", cex = 2.2, add = TRUE)
 
 # Add Mount Marcy as its own labeled entry in the legend
 legend("topleft",
        legend = c(range_labels, "Highest: Mount Marcy (1629 m)"),
        pch    = c(rep(21, 5), 24),
-       pt.bg  = c(elev_pal(mid_z), "red"),
+       pt.bg  = c(elev_pal(mid_z), "white"),
        col    = "black",
        pt.cex = c(rep(1.2, 5), 2.0),
        title  = "Elevation",
@@ -144,9 +145,6 @@ ny_pop <- get_decennial(
   year = 2020,
   geometry = FALSE
 )
-
-# Look at Data
-pop
 
 # Join population data onto your existing ny_counties shapefile by GEOID
 ny_counties <- left_join(ny_counties, ny_pop[, c("GEOID", "value")], by = "GEOID")
