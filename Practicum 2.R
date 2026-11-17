@@ -35,8 +35,6 @@ us_counties
 ny_counties <- us_counties %>%
   filter(STUSPS == "NY")
 
-plot(ny_counties)
-
 
 # 1 : Use shapefile to draw a map of the counties of New York State (and only New York State - do not include counties from neighboring states).
 # Plot the county boundaries
@@ -44,14 +42,24 @@ plot(st_geometry(ny_counties), col = "lightgrey", main = "Counties of New York S
 
 
 # 2: Using the same file, which is the largest county, by area, in New York? Which is the smallest?
+largest_area <- ny_counties[]
+smallest_area <- ny_counties[]
 
 
 # 3: Use nyshighpoints.csv to plot the location of high points of every county in the state of New York over the base county map.
-
-# add=TRUE draws over. the plot, pch=16 makes it a solid dot
+# add=TRUE draws over the plot, pch=16 makes it a solid dot
 plot(st_geometry(points), pch=16, add=TRUE)
 
 # 4: Use a color scale to mark the high points according to their height. Make sure to have at least four different colors included in your scale.
+
+# Check outliers
+points_sorted <- points[order(points$Elevation_Meters), ]
+tail(points_sorted$Elevation_Meters, 10)
+# 1629 is much higher but should not be splitted
+
+plot(st_geometry(ny_counties), col = "lightgrey")
+# Using Elevation_Meters 
+plot(st_geometry(points), col = points$Elevation_Meters, pch = 16, add = TRUE)
 
 
 # 5: What are the highest and lowest high points in the state?
@@ -62,7 +70,20 @@ plot(st_geometry(points), pch=16, add=TRUE)
 
 # 7: Use the tidycensus package to load county population in New York. Shade in each county according to its population. Use a light yellow to dark orange scale
 
+census_api_key("6c0caa75ce44c147825255c4f7e660b86bdaf606")
 
+# Load 2024 population by county, with geometry
+counties <- get_decennial(
+  geography = "county",
+  variables = "P1_001N",   # total population
+  year = 2020,
+  geometry = TRUE
+)
+
+# Look at Data
+counties
+
+# Filter to NYS
 
 # 8: Calculate population density for each county using population and land area. Shade in each county according to its population density. Use a light lavender to dark purple scale
 
