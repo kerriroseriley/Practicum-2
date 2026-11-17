@@ -5,7 +5,7 @@ format:
   pdf: default
 ---
 
-What follows are four spatial visualizations of New York State using thr 2024 U.S. Census County shapefile (cb_2024_us_county_500k), the NYS High Point Dataset (nyshighpoints.csv), the 2020 U.S. Decennial Census via tidycensus, and the Algara & Amlani County Presidential Returns Dataset (2000-2020):
+What follows are four spatial visualizations of New York State using the 2024 U.S. Census County shapefile (cb_2024_us_county_500k), the NYS High Point Dataset (nyshighpoints.csv), the 2020 U.S. Decennial Census via tidycensus, and the Algara & Amlani County Presidential Returns Dataset (2000-2020):
 
 - **Map 1**: New York Counties and Elevation High Points
 - **Map 2**: New York County Population (2020)

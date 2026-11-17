@@ -160,7 +160,7 @@ z       <- rescale(vals, to = c(0, 1), from = rng)
 polycol <- pop_pal(z)
 
 
-png("Figures/map2.png", width = 8, height = 6, units = "in", res = 300)
+png("Figures/map2.png", width = 11, height = 6, units = "in", res = 300)
 
 # Plot shaded NY counties
 plot(st_geometry(ny_counties), col = polycol, border = "black",
@@ -205,7 +205,7 @@ range_labels <- paste0(format(breaks[-6], big.mark = ",", trim = TRUE), "–",
 mid_z        <- seq(0.1, 0.9, length.out = 5)
 
 
-png("Figures/map3.png", width = 8, height = 6, units = "in", res = 300)
+png("Figures/map3.png", width = 11, height = 6, units = "in", res = 300)
 
 plot(st_geometry(ny_counties), col = polycol, border = "black",
      main = "New York County Population Density (per sq. mi.)")
