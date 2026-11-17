@@ -114,7 +114,7 @@ other_pts  <- points[-which.max(points$Elevation_Meters), ]
 # Recompute colors for the regular points (or keep original ptcol without the max point)
 ptcol_other <- ptcol[-which.max(points$Elevation_Meters)]
 
-png("Figures/map1.png", width = 8, height = 6, units = "in", res = 300)
+png("Figures/map1.png", width = 11, height = 6, units = "in", res = 300)
 
 # Plot base map, regular points, and the highlighted highest point
 plot(st_geometry(ny_counties), col = "lightgrey", main = "NY County High Points by Elevation")
