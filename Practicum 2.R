@@ -281,8 +281,11 @@ for (yr in years) {
 # Reset plotting layout back to default
 par(mfrow = c(1, 1), mar = c(5, 4, 4, 2) + 0.1)
 
-
-
+# Save the figures
+ggsave("Figures/map1.png", plot = map1, width = 8, height = 5, dpi = 300)
+ggsave("Figures/map2.png", plot = map2, width = 8, height = 5, dpi = 300)
+ggsave("Figures/map3.png", plot = map3, width = 8, height = 5, dpi = 300)
+ggsave("Figures/map4.png", plot = map4, width = 8, height = 5, dpi = 300)
 
 
 
