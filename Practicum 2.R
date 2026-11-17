@@ -6,6 +6,7 @@
 
 
 # Set up
+setwd("~/Desktop/Current Classes/R/Practicum 2")
 
 # load in packages
 library(sf) # reads shapefile - simple features
@@ -114,6 +115,8 @@ other_pts  <- points[-which.max(points$Elevation_Meters), ]
 # Recompute colors for the regular points (or keep original ptcol without the max point)
 ptcol_other <- ptcol[-which.max(points$Elevation_Meters)]
 
+png("Figures/map1.png", width = 8, height = 6, units = "in", res = 300)
+
 # Plot base map, regular points, and the highlighted highest point
 plot(st_geometry(ny_counties), col = "lightgrey", main = "NY County High Points by Elevation")
 plot(st_geometry(other_pts), pch = 21, bg = ptcol_other, col = "black", cex = 1.2, add = TRUE)
@@ -128,6 +131,8 @@ legend("topleft",
        pt.cex = c(rep(1.2, 5), 2.0),
        title  = "Elevation",
        bty    = "o")
+
+dev.off()
 
 # 7: Use the tidycensus package to load county population in New York. Shade in each county according to its population. Use a light yellow to dark orange scale
 census_api_key("6c0caa75ce44c147825255c4f7e660b86bdaf606")
@@ -157,6 +162,9 @@ rng     <- range(vals, na.rm = TRUE)
 z       <- rescale(vals, to = c(0, 1), from = rng)
 polycol <- pop_pal(z)
 
+
+png("Figures/map2.png", width = 8, height = 6, units = "in", res = 300)
+
 # Plot shaded NY counties
 plot(st_geometry(ny_counties), col = polycol, border = "black",
      main = "New York County Population (2020)")
@@ -173,6 +181,7 @@ legend("topleft",
        border = "black",
        title  = "Population",
        bty    = "o")
+dev.off()
 
 # 8: Calculate population density for each county using population and land area. 
 # Shade in each county according to its population density. Use a light lavender to dark purple scale.
@@ -191,9 +200,6 @@ z       <- rescale(vals, to = c(0, 1), from = rng)
 z_trans <- z ^ 0.3
 polycol <- dens_pal(z_trans)
 
-plot(st_geometry(ny_counties), col = polycol, border = "black",
-     main = "New York County Population Density (per sq. mi.)")
-
 # Back-transform the legend cutoffs so the numbers match the transformed colors
 z_cuts       <- seq(0, 1, length.out = 6)
 breaks       <- round(rng[1] + (z_cuts ^ (1 / 0.3)) * (rng[2] - rng[1]))
@@ -201,12 +207,20 @@ range_labels <- paste0(format(breaks[-6], big.mark = ",", trim = TRUE), "–",
                        format(breaks[-1], big.mark = ",", trim = TRUE))
 mid_z        <- seq(0.1, 0.9, length.out = 5)
 
+
+png("Figures/map3.png", width = 8, height = 6, units = "in", res = 300)
+
+plot(st_geometry(ny_counties), col = polycol, border = "black",
+     main = "New York County Population Density (per sq. mi.)")
+
 legend("topleft",
        legend = range_labels,
        fill   = dens_pal(mid_z),
        border = "black",
        title  = "Pop. Density (/sq mi)",
        bty    = "o")
+
+dev.off()
 
 # 9: What is the largest county, by population, in New York? What is the smallest? What is the most dense county in New York? What is the least dense?
 # Sort by population
@@ -238,8 +252,6 @@ download.file(url, destfile = dest, mode = "wb")
 # Load it into your R Environment
 load(dest)
 
-# 10: Bonus: Two-party presidential vote share in NY (2000–2020)
-
 # Pad FIPS codes to 5 digits so NY counties start with "36"
 # (Swap 'fips', 'election_year', 'democratic_raw_votes', 'republican_raw_votes' if names() differs)
 pres_elections_release$GEOID <- sprintf("%05d", as.numeric(pres_elections_release$fips))
@@ -255,6 +267,9 @@ ny_elec$dem_two_party <- ny_elec$democratic_raw_votes /
 
 # Create diverging Red -> White -> Blue palette
 partisan_pal <- gradient_n_pal(c("red3", "white", "blue3"))
+
+
+png("Figures/map4.png", width = 14, height = 8, units = "in", res = 300)
 
 # Plot all 6 elections in a 2x3 grid
 par(mfrow = c(2, 3), mar = c(1, 1, 3, 1))
@@ -278,14 +293,9 @@ for (yr in years) {
          bty    = "o")
 }
 
+dev.off()
+
 # Reset plotting layout back to default
 par(mfrow = c(1, 1), mar = c(5, 4, 4, 2) + 0.1)
-
-# Save the figures
-ggsave("Figures/map1.png", plot = map1, width = 8, height = 5, dpi = 300)
-ggsave("Figures/map2.png", plot = map2, width = 8, height = 5, dpi = 300)
-ggsave("Figures/map3.png", plot = map3, width = 8, height = 5, dpi = 300)
-ggsave("Figures/map4.png", plot = map4, width = 8, height = 5, dpi = 300)
-
 
 

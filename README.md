@@ -11,3 +11,4 @@ Spatial data analysis and choropleth mapping of New York State's 62 counties in 
 - `Practicum 2.pdf` - PDF version of the completed assignment
 - `Practicum 2.R` - Reproducible R script used for the analysis
 - `Data/` - Folder containing data used for the assignment
+- `Figures/` - Folder containing output of maps
