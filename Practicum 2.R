@@ -11,10 +11,9 @@
 library(sf) # reads shapefile - simple features
 library(tidyverse) # Includes ggplots2, dplyr, readr
 library(tidycensus) # Pulls NY county pop data from US census API
-
+library(scales) # palette function that runs from black to red
 
 # crs = 4326 is WGS 84, the ordinary latitude and longitude your phone’s GPS uses.
-
 
 # POINTS
 # Read in high points data set from my Data folder
@@ -32,21 +31,16 @@ plot(st_geometry(points))
 us_counties <- st_read("~/Desktop/Current Classes/R/Practicum 2/Data/cb_2024_us_county_500k/cb_2024_us_county_500k.shp", crs = 4326)
 us_counties
 
-plot(us_counties)
-plot(st_geometry(us_counties), col="lightgrey")
-
-plot(st_geometry(points), pch=16, add=TRUE)
-
-
-
 # Filter strictly to New York State
-ny_counties <- counties_us %>%
+ny_counties <- us_counties %>%
   filter(STUSPS == "NY")
+
+plot(ny_counties)
 
 
 # 1 : Use shapefile to draw a map of the counties of New York State (and only New York State - do not include counties from neighboring states).
-
-
+# Plot the county boundaries
+plot(st_geometry(ny_counties), col = "lightgrey", main = "Counties of New York State")
 
 
 # 2: Using the same file, which is the largest county, by area, in New York? Which is the smallest?
@@ -54,6 +48,8 @@ ny_counties <- counties_us %>%
 
 # 3: Use nyshighpoints.csv to plot the location of high points of every county in the state of New York over the base county map.
 
+# add=TRUE draws over. the plot, pch=16 makes it a solid dot
+plot(st_geometry(points), pch=16, add=TRUE)
 
 # 4: Use a color scale to mark the high points according to their height. Make sure to have at least four different colors included in your scale.
 
