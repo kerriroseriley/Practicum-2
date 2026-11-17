@@ -24,7 +24,6 @@ summary(points)
 points <- st_as_sf(points, coords = c("Longitude", "Latitude"), crs = 4326)
 points
 
-plot(points)
 plot(st_geometry(points))
 
 # POLYGONS
